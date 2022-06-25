@@ -197,7 +197,6 @@
 
 <!-- HEADER: MENU + HEROE SECTION -->
 <header>
-
 	<div class="menu">
 		<ul>
 			<li class="logo"><a href="https://codeigniter.com" target="_blank"><img height="44" title="CodeIgniter Logo"
@@ -305,6 +304,11 @@
 	</div>
 
 </footer>
+
+<?php
+
+
+?>
 
 <!-- SCRIPTS -->
 
