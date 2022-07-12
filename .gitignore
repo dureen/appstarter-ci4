@@ -1,5 +1,5 @@
 /node_modules
-/temp
+/vendor
 .env
 /.idea
 /.vscode
