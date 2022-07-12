@@ -19,25 +19,16 @@ namespace PhpCsFixer\FixerDefinition;
  */
 final class FixerDefinition implements FixerDefinitionInterface
 {
-    /**
-     * @var null|string
-     */
-    private $riskyDescription;
+    private string $summary;
 
     /**
      * @var CodeSampleInterface[]
      */
-    private $codeSamples;
+    private array $codeSamples;
 
-    /**
-     * @var string
-     */
-    private $summary;
+    private ?string $description;
 
-    /**
-     * @var null|string
-     */
-    private $description;
+    private ?string $riskyDescription;
 
     /**
      * @param CodeSampleInterface[] $codeSamples      array of samples, where single sample is [code, configuration]

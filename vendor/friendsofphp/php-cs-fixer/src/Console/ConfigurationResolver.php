@@ -75,15 +75,9 @@ final class ConfigurationResolver
      */
     private $configFile;
 
-    /**
-     * @var string
-     */
-    private $cwd;
+    private string $cwd;
 
-    /**
-     * @var ConfigInterface
-     */
-    private $defaultConfig;
+    private ConfigInterface $defaultConfig;
 
     /**
      * @var null|ReporterInterface
@@ -110,15 +104,9 @@ final class ConfigurationResolver
      */
     private $configFinderIsOverridden;
 
-    /**
-     * @var ToolInfoInterface
-     */
-    private $toolInfo;
+    private ToolInfoInterface $toolInfo;
 
-    /**
-     * @var array
-     */
-    private $options = [
+    private array $options = [
         'allow-risky' => null,
         'cache-file' => null,
         'config' => null,
@@ -194,8 +182,8 @@ final class ConfigurationResolver
         string $cwd,
         ToolInfoInterface $toolInfo
     ) {
-        $this->cwd = $cwd;
         $this->defaultConfig = $config;
+        $this->cwd = $cwd;
         $this->toolInfo = $toolInfo;
 
         foreach ($options as $name => $value) {
@@ -357,7 +345,7 @@ final class ConfigurationResolver
     public function getLinter(): LinterInterface
     {
         if (null === $this->linter) {
-            $this->linter = new Linter($this->getConfig()->getPhpExecutable());
+            $this->linter = new Linter();
         }
 
         return $this->linter;

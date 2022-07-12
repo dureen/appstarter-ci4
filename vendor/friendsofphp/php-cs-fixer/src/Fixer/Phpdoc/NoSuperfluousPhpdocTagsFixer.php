@@ -118,12 +118,13 @@ class Foo {
                 continue;
             }
 
-            $content = $initialContent = $token->getContent();
             $documentedElement = $this->findDocumentedElement($tokens, $index);
 
             if (null === $documentedElement) {
                 continue;
             }
+
+            $content = $initialContent = $token->getContent();
 
             if (true === $this->configuration['remove_inheritdoc']) {
                 $content = $this->removeSuperfluousInheritDoc($content);
@@ -200,6 +201,14 @@ class Foo {
         ];
 
         $index = $tokens->getNextMeaningfulToken($docCommentIndex);
+
+        // @TODO: drop condition when PHP 8.0+ is required
+        if (null !== $index && \defined('T_ATTRIBUTE') && $tokens[$index]->isGivenKind(T_ATTRIBUTE)) {
+            do {
+                $index = $tokens->findBlockEnd(Tokens::BLOCK_TYPE_ATTRIBUTE, $index);
+                $index = $tokens->getNextMeaningfulToken($index);
+            } while (null !== $index && $tokens[$index]->isGivenKind(T_ATTRIBUTE));
+        }
 
         while (true) {
             if (null === $index) {
@@ -359,14 +368,14 @@ class Foo {
     private function getReturnTypeInfo(Tokens $tokens, int $closingParenthesisIndex): array
     {
         $colonIndex = $tokens->getNextMeaningfulToken($closingParenthesisIndex);
-        if ($tokens[$colonIndex]->isGivenKind(CT::T_TYPE_COLON)) {
-            return $this->parseTypeHint($tokens, $tokens->getNextMeaningfulToken($colonIndex));
-        }
 
-        return [
-            'types' => [],
-            'allows_null' => true,
-        ];
+        return $tokens[$colonIndex]->isGivenKind(CT::T_TYPE_COLON)
+            ? $this->parseTypeHint($tokens, $tokens->getNextMeaningfulToken($colonIndex))
+            : [
+                'types' => [],
+                'allows_null' => true,
+            ]
+        ;
     }
 
     /**
@@ -376,17 +385,27 @@ class Foo {
     {
         $allowsNull = false;
 
-        if ($tokens[$index]->isGivenKind(CT::T_NULLABLE_TYPE)) {
-            $allowsNull = true;
-            $index = $tokens->getNextMeaningfulToken($index);
-        }
-
         $types = [];
 
         while (true) {
             $type = '';
 
-            while ($tokens[$index]->isGivenKind([T_NS_SEPARATOR, T_STATIC, T_STRING, CT::T_ARRAY_TYPEHINT, T_CALLABLE, CT::T_TYPE_INTERSECTION])) {
+            if (\defined('T_READONLY') && $tokens[$index]->isGivenKind(T_READONLY)) { // @TODO: simplify condition when PHP 8.1+ is required
+                $index = $tokens->getNextMeaningfulToken($index);
+            }
+
+            if ($tokens[$index]->isGivenKind([CT::T_CONSTRUCTOR_PROPERTY_PROMOTION_PUBLIC, CT::T_CONSTRUCTOR_PROPERTY_PROMOTION_PROTECTED, CT::T_CONSTRUCTOR_PROPERTY_PROMOTION_PRIVATE])) {
+                $index = $tokens->getNextMeaningfulToken($index);
+
+                continue;
+            }
+
+            if ($tokens[$index]->isGivenKind(CT::T_NULLABLE_TYPE)) {
+                $allowsNull = true;
+                $index = $tokens->getNextMeaningfulToken($index);
+            }
+
+            while ($tokens[$index]->isGivenKind([T_NS_SEPARATOR, T_STATIC, T_STRING, CT::T_ARRAY_TYPEHINT, T_CALLABLE])) {
                 $type .= $tokens[$index]->getContent();
                 $index = $tokens->getNextMeaningfulToken($index);
             }
@@ -397,7 +416,7 @@ class Foo {
 
             $types[] = $type;
 
-            if (!$tokens[$index]->isGivenKind(CT::T_TYPE_ALTERNATION)) {
+            if (!$tokens[$index]->isGivenKind([CT::T_TYPE_ALTERNATION, CT::T_TYPE_INTERSECTION])) {
                 break;
             }
 
@@ -416,7 +435,7 @@ class Foo {
     private function annotationIsSuperfluous(Annotation $annotation, array $info, array $symbolShortNames): bool
     {
         if ('param' === $annotation->getTag()->getName()) {
-            $regex = '/@param\s+(?:\S|\s(?!\$))++\s\$\S+\s+\S/';
+            $regex = '/@param\s+[^\$]+\s(?:\&\s*)?(?:\.{3}\s*)?\$\S+\s+\S/';
         } elseif ('var' === $annotation->getTag()->getName()) {
             $regex = '/@var\s+\S+(\s+\$\S+)?(\s+)(?!\*+\/)([^$\s]+)/';
         } else {

@@ -27,20 +27,14 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 final class FileFilterIterator extends \FilterIterator
 {
-    /**
-     * @var null|EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private ?EventDispatcherInterface $eventDispatcher;
 
-    /**
-     * @var CacheManagerInterface
-     */
-    private $cacheManager;
+    private CacheManagerInterface $cacheManager;
 
     /**
      * @var array<string,bool>
      */
-    private $visitedElements = [];
+    private array $visitedElements = [];
 
     public function __construct(
         \Traversable $iterator,
@@ -64,7 +58,7 @@ final class FileFilterIterator extends \FilterIterator
             throw new \RuntimeException(
                 sprintf(
                     'Expected instance of "\SplFileInfo", got "%s".',
-                    \is_object($file) ? \get_class($file) : \gettype($file)
+                    get_debug_type($file)
                 )
             );
         }

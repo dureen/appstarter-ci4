@@ -188,7 +188,7 @@
         <div class="px-3 py-2 text-end">
             <small>
             Designed and built with CodeIgniter and Bootstrap
-            Copyright © 2011-2022 io-code-dp. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a>
+            Copyright © 2011-2022 <a href="http://github.com/dureen">dureen</a>. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a>
             <small>
         </div>
     </footer>

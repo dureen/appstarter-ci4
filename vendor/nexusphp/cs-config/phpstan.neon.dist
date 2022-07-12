@@ -3,7 +3,7 @@ includes:
 
 parameters:
   tmpDir: build/phpstan
-  level: 9
+  level: 8
   paths:
     - src
     - tests
@@ -23,3 +23,5 @@ parameters:
   reportMaybesInMethodSignatures: true
   reportStaticMethodSignatures: true
   checkTooWideReturnTypesInProtectedAndPublicMethods: true
+  featureToggles:
+    disableCheckMissingIterableValueType: false
