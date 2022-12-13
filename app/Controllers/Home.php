@@ -8,4 +8,25 @@ class Home extends BaseController
     {
         return view('welcome_message');
     }
+
+    public function blog()
+    {
+        return view('welcome_message');
+    }
+
+    public function show()
+    {
+        
+        return view('welcome_message');
+    }
+
+    public function tags()
+    {
+        return view('welcome_message');
+    }
+
+    public function about()
+    {
+        return view('welcome_message');
+    }
 }
