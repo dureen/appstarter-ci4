@@ -4,29 +4,42 @@ namespace App\Controllers;
 
 class Home extends BaseController
 {
-    public function index()
+    public function index($page = 'home')
     {
-        return view('welcome_message');
+        if (! is_file(APPPATH . 'Views/pages/' . $page . '.php')) {
+            // Whoops, we don't have a page for that!
+            throw new \CodeIgniter\Exceptions\PageNotFoundException($page);
+        }
+
+        $data['title'] = ucfirst($page); // Capitalize the first letter
+
+        return view('templates/header', $data)
+            . view('templates/navbar')
+            . view('pages/' . $page)
+            . view('templates/footer');
     }
 
-    public function blog()
+    public function blog($target = "posts")
     {
-        return view('welcome_message');
+
+        echo 'haloo';
+        // if($target=='announcements');
+        // return view('home');
     }
 
     public function show()
     {
         
-        return view('welcome_message');
+        return view('home');
     }
 
     public function tags()
     {
-        return view('welcome_message');
+        return view('home');
     }
 
     public function about()
     {
-        return view('welcome_message');
+        return view('home');
     }
 }
