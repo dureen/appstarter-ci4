@@ -35,14 +35,14 @@ $routes->set404Override();
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
-// $routes->get('/', 'Home::index'); //default
+$routes->get('/', 'Home::index'); //default
 
 /*
  * --------------------------------------------------------------------
- * Route Definitions
+ * Dureen TM Route Definitions
  * --------------------------------------------------------------------
  */
-$routes->get('/', 'Auth\SignupController::index');
+// $routes->get('/', 'Auth\SignupController::index');
 $routes->get('/signup', 'Auth\SignupController::index');
 $routes->match(['get', 'post'], 'SignupController/store', 'Auth\SignupController::store');
 $routes->match(['get', 'post'], 'SigninController/loginAuth', 'Auth\SigninController::loginAuth');
