@@ -10,38 +10,49 @@ class SigninController extends BaseController
     public function index()
     {
         helper(['form']);
-        echo view('signin');
+        $data = [
+            'title' => 'Sign In',
+        ];
+        return view('template/header', $data)
+            . view('page/signin')
+            . view('template/footer');
     } 
   
     public function loginAuth()
     {
         $session = session();
-        $userModel = new UserModel();
+        $users = new UserModel();
         $email = $this->request->getVar('email');
         $password = $this->request->getVar('password');
         
-        $data = $userModel->where('email', $email)->first();
+        $data = $users->where('email', $email)->first();
         
         if($data){
-            $pass = $data['password'];
-            $authenticatePassword = password_verify($password, $pass);
-            if($authenticatePassword){
-                $ses_data = [
+            $verifyPassword = password_verify($password, $data['password']);
+            if($verifyPassword){
+                $session_data = [
                     'id' => $data['id'],
                     'name' => $data['name'],
                     'email' => $data['email'],
-                    'isLoggedIn' => TRUE
+                    'level' => $data['level'],
+                    'isLoggedIn' => TRUE,
                 ];
-                $session->set($ses_data);
+                $session->set($session_data);
                 return redirect()->to('/profile');
             
             }else{
-                $session->setFlashdata('msg', 'Password is incorrect.');
+                $session->setFlashdata('error', 'The password isn\'t correct.');
                 return redirect()->to('/signin');
             }
         }else{
-            $session->setFlashdata('msg', 'Email does not exist.');
+            $session->setFlashdata('error', 'The email address doesn\'t exist.');
             return redirect()->to('/signin');
         }
+    }
+
+    public function destroy()
+    {
+        session()->destroy();
+        return redirect()->to('/signin');
     }
 }

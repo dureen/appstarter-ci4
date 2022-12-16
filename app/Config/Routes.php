@@ -42,10 +42,13 @@ $routes->get('/', 'Home::index'); //default
  * Dureen TM Route Definitions
  * --------------------------------------------------------------------
  */
-// $routes->get('/', 'Auth\SignupController::index');
+
 $routes->get('/signup', 'Auth\SignupController::index');
-$routes->match(['get', 'post'], 'SignupController/store', 'Auth\SignupController::store');
-$routes->match(['get', 'post'], 'SigninController/loginAuth', 'Auth\SigninController::loginAuth');
+$routes->post('/signup', 'Auth\SignupController::store');
+$routes->get('/signup', 'Auth\SignupController::index');
+$routes->post('/signin', 'Auth\SigninController::loginAuth');
+$routes->match(['get', 'post'], '/signout', 'Auth\SigninController::destroy');
+
 $routes->get('/signin', 'Auth\SigninController::index');
 $routes->get('/profile', 'ProfileController::index',['filter' => 'authGuard']);
 
