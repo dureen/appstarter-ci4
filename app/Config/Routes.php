@@ -39,7 +39,7 @@ $routes->get('/', 'Home::index'); //default
 
 /*
  * --------------------------------------------------------------------
- * Dureen TM Route Definitions
+ * added by Dureen Route Definitions
  * --------------------------------------------------------------------
  */
 
@@ -49,8 +49,17 @@ $routes->get('/signup', 'Auth\SignupController::index');
 $routes->post('/signin', 'Auth\SigninController::loginAuth');
 $routes->match(['get', 'post'], '/signout', 'Auth\SigninController::destroy');
 
-$routes->get('/signin', 'Auth\SigninController::index');
-$routes->get('/profile', 'ProfileController::index',['filter' => 'authGuard']);
+$routes->get('/signin', 'Auth\SigninController::index', ['filter' => 'hasAccess']);
+
+$routes->get('/dashboard', 'DashboardController::index', ['filter' => 'authGuard']);
+
+$routes->get('/profile', 'ProfileController::index', ['filter' => 'authGuard']);
+$routes->post('/store/(:num)', 'ProfileController::store/$1', ['filter' => 'authGuard']);
+$routes->post('/update/(:num)', 'ProfileController::update/$1', ['filter' => 'authGuard']);
+$routes->post('/destroy', 'ProfileController::destroy', ['filter' => 'authGuard']);
+
+$routes->get('/users', 'UserController::index', ['filter' => 'authGuard']);
+
 
 /*
  * --------------------------------------------------------------------

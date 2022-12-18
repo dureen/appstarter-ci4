@@ -46,4 +46,12 @@ class UserModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function getUser($id = null)
+    {
+        if (! $id) {
+            return $this->findAll();
+        }
+        return $this->find($id);
+    }
 }

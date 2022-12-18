@@ -6,9 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/png" href="/favicon.ico"/>
 
-    <title>Document</title>
-    <link rel="stylesheet" href="<?php echo base_url('src/css/bootstrap.min.css'); ?>">
-    <script defer src="<?php echo base_url('src/js/alpine.min.js'); ?>"></script>
+    <title><?= $title??'Document' ?></title>
+    <link rel="stylesheet" href="<?= base_url('src/css/bootstrap.min.css'); ?>">
+    <script defer src="<?= base_url('src/js/alpine.min.js'); ?>"></script>
+    <script defer src="<?= base_url('src/js/bootstrap.min.js'); ?>"></script>
     <style>
         ul.nav {
             list-style-type: none;

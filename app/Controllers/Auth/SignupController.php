@@ -28,20 +28,20 @@ class SignupController extends BaseController
             'confirmpassword'  => 'matches[password]',
         ];
           
-        if($this->validate($rules)){
-            $users = new UserModel();
-            $data = [
-                'name'     => $this->request->getVar('name'),
-                'email'    => $this->request->getVar('email'),
-                'password' => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT),
-                'level'    => '1',
-            ];
-            $users->save($data);
-            return redirect()->to('/signin');
-        }else{
+        if(! $this->validate($rules)) {
             $data['validation'] = $this->validator;
             return view('signup', $data);
         }
-          
+        
+        $users = new UserModel();
+        $data = [
+            'name'     => $this->request->getVar('name'),
+            'email'    => $this->request->getVar('email'),
+            'password' => password_hash($this->request->getVar('password'), PASSWORD_DEFAULT),
+            'level'    => '1',
+        ];
+        
+        $users->save($data);
+        return redirect()->to('/signin');          
     }
 }

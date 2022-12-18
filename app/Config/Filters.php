@@ -23,7 +23,8 @@ class Filters extends BaseConfig
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
-        'authGuard' => \App\Filters\AuthGuard::class, // dureen
+        'authGuard'     => \App\Filters\AuthGuard::class, // added by dureen
+        'hasAccess'     => \App\Filters\HasAccess::class, // added by dureen
     ];
 
     /**
@@ -35,7 +36,8 @@ class Filters extends BaseConfig
     public $globals = [
         'before' => [
             // 'honeypot',
-            // 'csrf',
+            'csrf',
+            // 'csrf' => ['except' => ['api/record/save']], // added by Dureen
             // 'invalidchars',
         ],
         'after' => [
@@ -58,7 +60,10 @@ class Filters extends BaseConfig
      *
      * @var array
      */
-    public $methods = [];
+    public $methods = [
+        // 'get'  => ['csrf'], // added by Dureen
+        'post' => ['csrf'], // added by Dureen
+    ];
 
     /**
      * List of filter aliases that should run on any

@@ -27,27 +27,24 @@ class SigninController extends BaseController
         
         $data = $users->where('email', $email)->first();
         
-        if($data){
-            $verifyPassword = password_verify($password, $data['password']);
-            if($verifyPassword){
-                $session_data = [
-                    'id' => $data['id'],
-                    'name' => $data['name'],
-                    'email' => $data['email'],
-                    'level' => $data['level'],
-                    'isLoggedIn' => TRUE,
-                ];
-                $session->set($session_data);
-                return redirect()->to('/profile');
-            
-            }else{
-                $session->setFlashdata('error', 'The password isn\'t correct.');
-                return redirect()->to('/signin');
-            }
-        }else{
-            $session->setFlashdata('error', 'The email address doesn\'t exist.');
-            return redirect()->to('/signin');
+        if(! $data){
+            return redirect()->back()->with('error', 'The email address doesn\'t exist.');
         }
+
+        if(! password_verify($password, $data['password'])) {
+            return redirect()->back()->with('error', 'The password isn\'t correct.');
+        }
+
+        $session_data = [
+            'id' => $data['id'],
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'level' => $data['level'],
+            'isLoggedIn' => TRUE,
+        ];
+        
+        $session->set($session_data);
+        return redirect()->to('/dashboard');
     }
 
     public function destroy()
