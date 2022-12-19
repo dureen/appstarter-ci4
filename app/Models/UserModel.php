@@ -21,6 +21,7 @@ class UserModel extends Model
         'email_verified_at',
         'token',
         'level',
+        'updated_at'
     ];
 
     // Dates
