@@ -7,8 +7,7 @@
  | Don't show ANY in production environments. Instead, let the system catch
  | it and display a generic error message.
  */
-// ini_set('display_errors', 'Off') // uncomment when production is ready.
-ini_set('display_errors', '1'); // <-- added for developing purpose.
+ini_set('display_errors', 'Off');
 
 error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT & ~E_USER_NOTICE & ~E_USER_DEPRECATED);
 
